@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+#-*- coding: utf-8 -*-
 '''
 Surya Teja Cheedella
 shine123surya[at]gmail[dot]com
@@ -24,12 +26,12 @@ def saveCropped(img, name):
 
 if __name__== "__main__":
 	# paths to input and output images
-	input_path= "old/input_images/"
-	output_path= "old/output_images/"
+	input_path= "input_images/"
+	output_path= "output_images/"
 
 	# load pre-trained frontalface cascade classifier
 	frontal_face= cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
-	input_names= listdir("/home/suryateja/Documents/GitHub/FaceRecognizer/"+ input_path)
+	input_names= listdir("C:\Users\ADMIN\FaceRecognizer/"+ input_path)
 
 	print("Starting to detect faces in images and save the cropped images to output file...")
 	sttime= time.clock()

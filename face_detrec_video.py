@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+#-*- coding: utf-8 -*-
 '''
 Surya Teja Cheedella
 shine123surya[at]gmail[dot]com
@@ -25,7 +27,7 @@ import cv2.cv as cv
 import numpy as np
 import os
 import sys, time
-import requests, facebook
+#import requests, facebook
 
 def get_images(path, size):
     '''
@@ -104,7 +106,7 @@ def post_on_facebook(intruder, counter, picture_name):
     Takes name of intruder and posts on your facebok timeline.
     You need to get access_token from facebook GraphAPI and paste it below.
     '''
-    # has a life time of 1 hr. So, no use even if you steal this 😜
+     #has a life time of 1 hr. So, no use even if you steal this 😜
     token= "CAACEdEose0cBAPr3Hjm3zudDaDg0CHZBbWj9TBKyBJH6NSXkNYT9nCqvMnp5rdjjBStMkt8aiicc22tyZBs5wb8g4jZCg2wfoBQUc8C7p38VoZBQWRgbZAZCQ8MDjeBFZBxvs5Ex0X0QhKor3ZAJMZBvjWXFx0Rdd6lDdhuwvfZCeaKRbM4kTyXbZCwHpXmsj6kX4bJ1ZA5JDMZBdLXJYeV9Bl1zM"
     url= "https://graph.facebook.com/me/feed"
 
@@ -148,31 +150,32 @@ if __name__== "__main__":
 
     while(True):
         ret, frame= cap.read()
-        gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        gray_frame = cv2.equalizeHist(gray_frame)
+        if ret is True:
+         gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+         gray_frame = cv2.equalizeHist(gray_frame)
 
-        bBoxes= detect_faces(gray_frame)
+         bBoxes= detect_faces(gray_frame)
 
-        for bBox in bBoxes:
-            (p,q,r,s)= bBox
-            cv2.rectangle(frame, (p,q), (p+r,q+s), (225,0,25), 2)
+         for bBox in bBoxes:
+             (p,q,r,s)= bBox
+             cv2.rectangle(frame, (p,q), (p+r,q+s), (225,0,25), 2)
 
-            crop_gray_frame= gray_frame[q:q+s, p:p+r]
-            crop_gray_frame= cv2.resize(crop_gray_frame, (256, 256))
+             crop_gray_frame= gray_frame[q:q+s, p:p+r]
+             crop_gray_frame= cv2.resize(crop_gray_frame, (256, 256))
 
-            [predicted_label, predicted_conf]= eigen_model.predict(np.asarray(crop_gray_frame))
-            last_20.append(predicted_label)
-            last_20= last_20[1:]
+             [predicted_label, predicted_conf]= eigen_model.predict(np.asarray(crop_gray_frame))
+             last_20.append(predicted_label)
+             last_20= last_20[1:]
 
-            '''
-            counter modulo x: changes value of final label for every x frames
-            Use max_label or predicted_label as you wish to see in the output video.
+             '''
+             counter modulo x: changes value of final label for every x frames
+             Use max_label or predicted_label as you wish to see in the output video.
                 But, posting on facebook always use max_label as a parameter.
-            '''
+             '''
 
-            cv2.putText(frame, box_text, (p-20, q-5), cv2.FONT_HERSHEY_PLAIN, 1.3, (25,0,225), 2)
+             cv2.putText(frame, box_text, (p-20, q-5), cv2.FONT_HERSHEY_PLAIN, 1.3, (25,0,225), 2)
 
-            if counter%10== 0:
+             if counter%10== 0:
                 max_label= majority(last_20)
                 #box_text= format("Subject: "+ people[max_label])
                 box_text= format("Subject: "+ people[predicted_label])
@@ -186,16 +189,16 @@ if __name__== "__main__":
                         print("Posting on your facebook timeline...")
                         picture_name= "frame.jpg"
                         cv2.imwrite(picture_name, frame)
-                        post_on_facebook(people[final_label], counter, picture_name)
+                        #post_on_facebook(people[final_label], counter, picture_name)
                         final_5= []
 
 
 
 
-        cv2.imshow("Video Window", frame)
-        counter+= 1
+         cv2.imshow("Video Window", frame)
+         counter+= 1
 
-        if (cv2.waitKey(5) & 0xFF== 27):
+         if (cv2.waitKey(5) & 0xFF== 27):
             break
 
     cv2.destroyAllWindows()
